@@ -1,0 +1,51 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Status</title>
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
+    <script src="~/signalr/hubs"></script>
+</head>
+<body>
+    <div id="message"> 
+        hello
+    </div>
+    <button id="Sessions">action</button>
+
+    <script>
+        $(document).ready(function () {
+                        
+            $.connection.sessionsHub.client.SendMessage = function (session) {
+
+                $('#message').html($('#message').html() + '<br>' + session)
+
+                console.log('got message:', session);
+            };
+
+        
+            $.connection.hub.start().done(function () {
+                
+
+                var r = $.connection.sessionsHub.server.addGroups();
+
+            $("#Sessions").on("click", function (event) {
+                var that = $(this);
+                var currentSession = "message from client" + Math.random();
+
+
+                    $.connection.sessionsHub.server.sendMessage(currentSession);
+                })
+            });
+    });
+    </script>
+
+</body>
+</html>
